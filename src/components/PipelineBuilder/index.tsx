@@ -33,6 +33,49 @@ export const PipelineBuilder = () => {
     [setEdges]
   );
 
+  const onDragOver = useCallback((event: React.DragEvent) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    (event: React.DragEvent) => {
+      event.preventDefault();
+
+      const type = event.dataTransfer.getData('application/reactflow');
+
+      // check if we have data
+      if (!type) {
+        return;
+      }
+
+      const data = JSON.parse(type);
+
+      // get the position of where we dropped the node
+      const reactFlowBounds = document.querySelector('.react-flow')?.getBoundingClientRect();
+      
+      if (reactFlowBounds) {
+        const position = {
+          x: event.clientX - reactFlowBounds.left,
+          y: event.clientY - reactFlowBounds.top,
+        };
+
+        const newNode = {
+          id: `${data.type}-${Math.random()}`,
+          type: data.type,
+          position,
+          data: {
+            label: data.label,
+            ...data,
+          },
+        };
+
+        setNodes((nds) => nds.concat(newNode));
+      }
+    },
+    [setNodes]
+  );
+
   return (
     <div className="w-full h-screen flex">
       <Sidebar />
@@ -44,6 +87,8 @@ export const PipelineBuilder = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
+          onDragOver={onDragOver}
+          onDrop={onDrop}
           fitView
         >
           <Background />
