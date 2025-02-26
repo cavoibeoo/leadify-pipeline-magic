@@ -24,13 +24,31 @@ const nodeTypes = {
   action: ActionNode,
 };
 
+const MAX_CONNECTIONS = 4;
+
 export const PipelineBuilder = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const onConnect = useCallback(
-    (params: Connection | Edge) => setEdges((eds) => addEdge(params, eds)),
-    [setEdges]
+    (params: Connection | Edge) => {
+      // Count existing connections for the source and target nodes
+      const sourceConnections = edges.filter(
+        edge => edge.source === params.source
+      ).length;
+      const targetConnections = edges.filter(
+        edge => edge.target === params.target
+      ).length;
+
+      // Check if either node has reached the connection limit
+      if (sourceConnections >= MAX_CONNECTIONS || targetConnections >= MAX_CONNECTIONS) {
+        console.log('Maximum connections reached for this node');
+        return;
+      }
+
+      setEdges(eds => addEdge(params, eds));
+    },
+    [edges, setEdges]
   );
 
   const onDragOver = useCallback((event: React.DragEvent) => {
@@ -44,14 +62,11 @@ export const PipelineBuilder = () => {
 
       const type = event.dataTransfer.getData('application/reactflow');
 
-      // check if we have data
       if (!type) {
         return;
       }
 
       const data = JSON.parse(type);
-
-      // get the position of where we dropped the node
       const reactFlowBounds = document.querySelector('.react-flow')?.getBoundingClientRect();
       
       if (reactFlowBounds) {
