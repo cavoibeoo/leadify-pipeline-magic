@@ -10,18 +10,29 @@ import {
   Edge,
   useNodesState,
   useEdgesState,
+  MarkerType,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
 import { LeadSourceNode } from './nodes/LeadSourceNode';
 import { VerificationNode } from './nodes/VerificationNode';
 import { ActionNode } from './nodes/ActionNode';
+import { ExportNode } from './nodes/ExportNode';
 import { Sidebar } from './Sidebar';
 
 const nodeTypes = {
   leadSource: LeadSourceNode,
   verification: VerificationNode,
   action: ActionNode,
+  export: ExportNode,
+};
+
+const defaultEdgeOptions = {
+  markerEnd: {
+    type: MarkerType.Arrow,
+    width: 20,
+    height: 20,
+  },
 };
 
 const MAX_CONNECTIONS = 4;
@@ -32,7 +43,6 @@ export const PipelineBuilder = () => {
 
   const onConnect = useCallback(
     (params: Connection | Edge) => {
-      // Count existing connections for the source and target nodes
       const sourceConnections = edges.filter(
         edge => edge.source === params.source
       ).length;
@@ -40,13 +50,12 @@ export const PipelineBuilder = () => {
         edge => edge.target === params.target
       ).length;
 
-      // Check if either node has reached the connection limit
       if (sourceConnections >= MAX_CONNECTIONS || targetConnections >= MAX_CONNECTIONS) {
         console.log('Maximum connections reached for this node');
         return;
       }
 
-      setEdges(eds => addEdge(params, eds));
+      setEdges(eds => addEdge({ ...params, markerEnd: { type: MarkerType.Arrow } }, eds));
     },
     [edges, setEdges]
   );
@@ -102,6 +111,7 @@ export const PipelineBuilder = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
+          defaultEdgeOptions={defaultEdgeOptions}
           onDragOver={onDragOver}
           onDrop={onDrop}
           fitView

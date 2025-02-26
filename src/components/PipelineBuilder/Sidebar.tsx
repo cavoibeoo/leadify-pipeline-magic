@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { Save, Edit, RotateCcw } from "lucide-react";
 
 const nodeTemplates = [
   {
@@ -23,6 +24,12 @@ const nodeTemplates = [
       { type: 'action', label: 'Send to Webhook', action: 'webhook' },
     ],
   },
+  {
+    category: 'Export',
+    items: [
+      { type: 'export', label: 'Export to Sheet' },
+    ],
+  },
 ];
 
 export const Sidebar = () => {
@@ -33,6 +40,20 @@ export const Sidebar = () => {
 
   return (
     <aside className="w-64 bg-white border-r border-gray-200 p-4 overflow-y-auto">
+      <div className="flex gap-2 mb-4">
+        <Button variant="outline" size="sm">
+          <Edit className="w-4 h-4 mr-2" />
+          Edit
+        </Button>
+        <Button variant="outline" size="sm">
+          <Save className="w-4 h-4 mr-2" />
+          Save
+        </Button>
+        <Button variant="outline" size="sm">
+          <RotateCcw className="w-4 h-4 mr-2" />
+          Reset
+        </Button>
+      </div>
       <h2 className="text-lg font-semibold mb-4">Pipeline Components</h2>
       {nodeTemplates.map((category) => (
         <div key={category.category} className="mb-6">
