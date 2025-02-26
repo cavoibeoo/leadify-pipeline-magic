@@ -11,6 +11,7 @@ import {
   useNodesState,
   useEdgesState,
   MarkerType,
+  Node,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 
@@ -40,6 +41,20 @@ const MAX_CONNECTIONS = 4;
 export const PipelineBuilder = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  const onNodesDelete = useCallback(
+    (deleted: Node[]) => {
+      setEdges(
+        edges.filter(
+          (edge) =>
+            !deleted.some(
+              (node) => node.id === edge.source || node.id === edge.target
+            )
+        )
+      );
+    },
+    [edges, setEdges]
+  );
 
   const onConnect = useCallback(
     (params: Connection | Edge) => {
@@ -110,10 +125,12 @@ export const PipelineBuilder = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onNodesDelete={onNodesDelete}
           nodeTypes={nodeTypes}
           defaultEdgeOptions={defaultEdgeOptions}
           onDragOver={onDragOver}
           onDrop={onDrop}
+          deleteKeyCode="Delete"
           fitView
         >
           <Background />
