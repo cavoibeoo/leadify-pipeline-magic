@@ -50,8 +50,18 @@ export const LogicNode = memo(({ data }: { data: { label: string } }) => {
           </Popover>
         </div>
         <Handle type="target" position={Position.Left} className="w-2 h-2" />
-        <Handle type="source" position={Position.Right} className="w-2 h-2" label="True" />
-        <Handle type="source" position={Position.Bottom} className="w-2 h-2" label="False" />
+        <div className="relative">
+          <Handle type="source" position={Position.Right} className="w-2 h-2" />
+          <span className="absolute -right-14 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+            True
+          </span>
+        </div>
+        <div className="relative">
+          <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
+          <span className="absolute bottom-0 left-1/2 transform translate-y-4 -translate-x-1/2 text-xs text-muted-foreground">
+            False
+          </span>
+        </div>
       </CardContent>
     </Card>
   );
