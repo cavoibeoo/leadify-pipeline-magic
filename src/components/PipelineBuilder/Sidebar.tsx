@@ -1,6 +1,12 @@
 
 import { Button } from "@/components/ui/button";
 import { Save, Edit, RotateCcw } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const nodeTemplates = [
   {
@@ -15,6 +21,12 @@ const nodeTemplates = [
     items: [
       { type: 'verification', label: 'Pre-verify Leads', action: 'pre-verify' },
       { type: 'verification', label: 'Call Lead', action: 'call' },
+    ],
+  },
+  {
+    category: 'Logic',
+    items: [
+      { type: 'logic', label: 'If/Else Logic', action: 'conditional' },
     ],
   },
   {
@@ -39,17 +51,17 @@ export const Sidebar = () => {
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-gray-200 p-4 overflow-y-auto">
-      <div className="flex gap-2 mb-4">
-        <Button variant="outline" size="sm">
+    <aside className="w-80 bg-white border-r border-gray-200 p-4 overflow-y-auto">
+      <div className="flex gap-2 mb-4 flex-wrap">
+        <Button variant="outline" size="sm" className="flex-1">
           <Edit className="w-4 h-4 mr-2" />
           Edit
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="flex-1">
           <Save className="w-4 h-4 mr-2" />
           Save
         </Button>
-        <Button variant="outline" size="sm">
+        <Button variant="outline" size="sm" className="flex-1">
           <RotateCcw className="w-4 h-4 mr-2" />
           Reset
         </Button>

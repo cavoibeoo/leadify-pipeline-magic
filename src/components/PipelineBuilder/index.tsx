@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from 'react';
 import {
   ReactFlow,
@@ -19,6 +18,7 @@ import { LeadSourceNode } from './nodes/LeadSourceNode';
 import { VerificationNode } from './nodes/VerificationNode';
 import { ActionNode } from './nodes/ActionNode';
 import { ExportNode } from './nodes/ExportNode';
+import { LogicNode } from './nodes/LogicNode';
 import { Sidebar } from './Sidebar';
 
 const nodeTypes = {
@@ -26,6 +26,7 @@ const nodeTypes = {
   verification: VerificationNode,
   action: ActionNode,
   export: ExportNode,
+  logic: LogicNode,
 };
 
 const defaultEdgeOptions = {

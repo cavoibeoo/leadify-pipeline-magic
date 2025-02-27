@@ -1,8 +1,22 @@
 
-import { memo, useState } from 'react';
+import { memo } from 'react';
 import { Handle, Position } from '@xyflow/react';
-import { Sheet, Database, MoreHorizontal } from 'lucide-react';
+import { Table, Facebook, MoreHorizontal, Info } from 'lucide-react';
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
@@ -10,26 +24,14 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 
 const icons = {
-  sheets: Sheet,
-  facebook: Database,
+  sheets: Table,
+  facebook: Facebook,
 };
 
-export const LeadSourceNode = memo(({ data, id }: { data: { label: string; source: keyof typeof icons }; id: string }) => {
-  const Icon = icons[data.source] || Database;
-  const [settings, setSettings] = useState({
-    apiKey: '',
-    url: '',
-  });
-
-  const handleSettingChange = (field: keyof typeof settings) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSettings(prev => ({
-      ...prev,
-      [field]: e.target.value
-    }));
-  };
+export const LeadSourceNode = memo(({ data }: { data: { label: string; source: keyof typeof icons } }) => {
+  const Icon = icons[data.source] || Table;
 
   return (
     <Card className="min-w-[180px]">
@@ -48,29 +50,43 @@ export const LeadSourceNode = memo(({ data, id }: { data: { label: string; sourc
             <PopoverContent className="w-80">
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <h4 className="font-medium leading-none">Settings</h4>
+                  <h4 className="font-medium leading-none">Sheet Settings</h4>
                   <p className="text-sm text-muted-foreground">
-                    Configure your lead source settings.
+                    Configure your sheet connection.
                   </p>
                 </div>
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="apiKey">API Key</Label>
+                    <Label htmlFor="sheetId">Sheet ID</Label>
                     <Input
-                      id="apiKey"
-                      value={settings.apiKey}
-                      onChange={handleSettingChange('apiKey')}
+                      id="sheetId"
                       className="col-span-2"
                     />
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <Label htmlFor="url">URL</Label>
-                    <Input
-                      id="url"
-                      value={settings.url}
-                      onChange={handleSettingChange('url')}
-                      className="col-span-2"
-                    />
+                    <div className="flex items-center gap-2">
+                      <Label htmlFor="updateMethod">Update Method</Label>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="w-4 h-4 text-gray-500" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Polling: Check for updates every few minutes<br/>
+                               Webhook: Get instant updates when changes occur</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    <Select defaultValue="polling">
+                      <SelectTrigger className="col-span-2">
+                        <SelectValue placeholder="Select update method" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="polling">Polling</SelectItem>
+                        <SelectItem value="webhook">Webhook</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
               </div>
@@ -78,8 +94,6 @@ export const LeadSourceNode = memo(({ data, id }: { data: { label: string; sourc
           </Popover>
         </div>
         <Handle type="source" position={Position.Right} className="w-2 h-2" />
-        <Handle type="source" position={Position.Top} className="w-2 h-2" />
-        <Handle type="source" position={Position.Bottom} className="w-2 h-2" />
       </CardContent>
     </Card>
   );
