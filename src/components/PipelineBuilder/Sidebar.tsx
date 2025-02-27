@@ -1,12 +1,5 @@
-
 import { Button } from "@/components/ui/button";
 import { Save, Edit, RotateCcw } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 const nodeTemplates = [
   {
@@ -21,6 +14,13 @@ const nodeTemplates = [
     items: [
       { type: 'verification', label: 'Pre-verify Leads', action: 'pre-verify' },
       { type: 'verification', label: 'Call Lead', action: 'call' },
+    ],
+  },
+  {
+    category: 'Analysis',
+    items: [
+      { type: 'analyzeAI', label: 'Analyze Call Script', action: 'analyze-call' },
+      { type: 'webAnalyze', label: 'Visit & Analyze Web', action: 'analyze-web' },
     ],
   },
   {
